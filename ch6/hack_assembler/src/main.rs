@@ -3,8 +3,10 @@ use clap::Parser;
 use std::fs::File;
 use std::io::{self, BufRead, BufReader};
 
+use crate::code::Code;
 use crate::parser::AsmParser;
 
+mod code;
 mod parser;
 
 #[derive(Parser, Debug)]
@@ -21,9 +23,21 @@ fn main() -> Result<()> {
 
     let mut parser = AsmParser::new(reader);
 
+    let mut machine_code = String::new();
+
     while parser.has_more_lines()? {
-        println!("{:?}", parser.line().unwrap())
+        let instruction = parser.line().unwrap();
+        if instruction.is_some() {
+            match Code::assemble(&instruction.as_ref().unwrap()).unwrap() {
+                None => continue,
+                Some(assembled) => {
+                    machine_code = String::from(format!("{}\n{:0>16b}", machine_code, assembled));
+                }
+            }
+        }
     }
+
+    println!("{}", machine_code);
 
     Ok(())
 }
