@@ -8,7 +8,7 @@ impl Code {
         match instruction {
             Instruction::A(symbol) => {
                 let number: u16 = symbol.parse()?;
-                if number > u16::MAX / 2 - 1 {
+                if number > u16::MAX / 2 {
                     return Err(anyhow!("symbol number exceeded."));
                 }
                 Ok(Some(number))
@@ -67,7 +67,8 @@ impl Code {
             "M" => (0b110000, true),
             "!M" => (0b110001, true),
             "-M" => (0b110011, true),
-            "M+1" => (0b110010, true),
+            "M+1" => (0b110111, true),
+            "M-1" => (0b110010, true),
             "D+M" => (0b000010, true),
             "D-M" => (0b010011, true),
             "M-D" => (0b000111, true),
@@ -85,7 +86,7 @@ impl Code {
                 "JEQ" => 0b010,
                 "JGE" => 0b011,
                 "JLT" => 0b100,
-                "JME" => 0b101,
+                "JNE" => 0b101,
                 "JLE" => 0b110,
                 "JMP" => 0b111,
                 &_ => unreachable!(),

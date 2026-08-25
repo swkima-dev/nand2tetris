@@ -14,7 +14,7 @@ impl<T: BufRead> AsmParser<T> {
             reader,
             _current_line: String::new(),
             c_regex: Regex::new(
-                r"((?<dest>\w)=)?(?<comp>[!\-]?[01ADM](?:[+\-&|][1ADM])?)(;(?<jump>\w))?",
+                r"((?<dest>[ADM]{1,3})=)?(?<comp>[!\-]?[01ADM](?:[+\-&|][1ADM])?)(;(?<jump>\w+))?",
             )
             .expect("This regex is valid."),
         }
