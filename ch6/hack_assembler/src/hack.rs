@@ -20,8 +20,8 @@ pub fn assembler(path: &str) -> Result<String> {
     let mut line_counter = 0;
     while parser.has_more_lines()? {
         let instruction = parser.line().unwrap();
-        if instruction.is_some() {
-            match instruction.unwrap() {
+        if let Some(instruction) = instruction {
+            match instruction {
                 Instruction::A(_) => line_counter += 1,
 
                 Instruction::C {
@@ -47,11 +47,11 @@ pub fn assembler(path: &str) -> Result<String> {
     while parser.has_more_lines()? {
         let instruction = parser.line().unwrap();
         eprintln!("{:?}", &instruction);
-        if instruction.is_some() {
-            match code.assemble(&instruction.as_ref().unwrap()).unwrap() {
+        if let Some(instruction) = instruction {
+            match code.assemble(&instruction)? {
                 None => continue,
                 Some(assembled) => {
-                    machine_code = String::from(format!("{}{:0>16b}\n", machine_code, assembled));
+                    machine_code = format!("{}{:0>16b}\n", machine_code, assembled);
                 }
             }
         }

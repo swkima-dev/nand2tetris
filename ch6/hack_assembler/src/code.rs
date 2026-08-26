@@ -49,10 +49,10 @@ impl Code {
                     }
                     return Ok(Some(number));
                 }
-                if let Some(address) = self.get_address(&symbol) {
+                if let Some(address) = self.get_address(symbol) {
                     return Ok(Some(*address));
                 }
-                if !self.contains(&symbol) {
+                if !self.contains(symbol) {
                     return Ok(Some(self.add_variable(symbol.to_string())));
                 }
                 Err(anyhow!("invalid symbol."))

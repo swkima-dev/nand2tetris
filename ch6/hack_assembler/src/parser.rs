@@ -34,26 +34,26 @@ impl<T: BufRead> AsmParser<T> {
         let instruction = buffer.trim();
 
         if instruction.starts_with("//") {
-            return Ok(Some(Instruction::Comment));
+            Ok(Some(Instruction::Comment))
         } else if instruction.is_empty() {
-            return Ok(None);
+            Ok(None)
         } else if instruction.starts_with("@") {
-            return Ok(Some(Instruction::A(
+            Ok(Some(Instruction::A(
                 instruction.strip_prefix("@").unwrap().to_string(),
-            )));
+            )))
         } else if instruction.starts_with("(") && instruction.ends_with(")") {
-            return Ok(Some(Instruction::L(
+            Ok(Some(Instruction::L(
                 instruction
                     .strip_prefix("(")
                     .unwrap()
                     .strip_suffix(")")
                     .unwrap()
                     .to_string(),
-            )));
+            )))
         } else {
             match self.c_regex.captures(instruction) {
                 Some(caps) => {
-                    return Ok(Some(Instruction::C {
+                    Ok(Some(Instruction::C {
                         dest: caps.name("dest").map(|m| m.as_str().to_string()),
                         comp: caps
                             .name("comp")
@@ -61,7 +61,7 @@ impl<T: BufRead> AsmParser<T> {
                             .filter(|s| !s.is_empty())
                             .expect("comp is necessary"),
                         jump: caps.name("jump").map(|m| m.as_str().to_string()),
-                    }));
+                    }))
                 }
                 None => Err(anyhow!("C Instruction parse error.")),
             }
