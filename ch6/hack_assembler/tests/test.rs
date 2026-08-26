@@ -22,13 +22,18 @@ fn add_asm() {
 }
 
 #[test]
-fn pongl_asm() {
-    assert_assembles_to("PongL.asm", "PongL.hack");
+fn maxl_asm() {
+    assert_assembles_to("MaxL.asm", "MaxL.hack");
 }
 
 #[test]
-fn maxl_asm() {
-    assert_assembles_to("MaxL.asm", "MaxL.hack");
+fn rectl_asm() {
+    assert_assembles_to("RectL.asm", "RectL.hack");
+}
+
+#[test]
+fn pongl_asm() {
+    assert_assembles_to("PongL.asm", "PongL.hack");
 }
 
 #[test]
@@ -39,4 +44,9 @@ fn max_asm() {
 #[test]
 fn rect_asm() {
     assert_assembles_to("Rect.asm", "Rect.hack");
+}
+
+#[test]
+fn pong_asm() {
+    assert_assembles_to("Pong.asm", "Pong.hack");
 }
