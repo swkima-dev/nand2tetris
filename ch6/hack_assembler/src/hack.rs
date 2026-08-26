@@ -1,5 +1,5 @@
 use crate::code::Code;
-use crate::parser::AsmParser;
+use crate::parser::{AsmParser, Instruction};
 use anyhow::Result;
 use std::fs::File;
 use std::io::{self, BufRead, BufReader};
@@ -15,13 +15,40 @@ pub fn assembler(path: &str) -> Result<String> {
     let reader = open(path)?;
 
     let mut parser = AsmParser::new(reader);
+    let mut code = Code::new();
 
+    let mut line_counter = 0;
+    while parser.has_more_lines()? {
+        let instruction = parser.line().unwrap();
+        if instruction.is_some() {
+            match instruction.unwrap() {
+                Instruction::A(_) => line_counter += 1,
+
+                Instruction::C {
+                    dest: _,
+                    comp: _,
+                    jump: _,
+                } => line_counter += 1,
+
+                Instruction::L(symbol) => {
+                    if !code.contains(&symbol) {
+                        code.add_entry(symbol, line_counter);
+                    }
+                }
+                _ => continue,
+            }
+        }
+    }
+
+    let reader = open(path)?;
+    parser.reader_init(reader)?;
     let mut machine_code = String::new();
 
     while parser.has_more_lines()? {
         let instruction = parser.line().unwrap();
+        eprintln!("{:?}", &instruction);
         if instruction.is_some() {
-            match Code::assemble(&instruction.as_ref().unwrap()).unwrap() {
+            match code.assemble(&instruction.as_ref().unwrap()).unwrap() {
                 None => continue,
                 Some(assembled) => {
                     machine_code = String::from(format!("{}{:0>16b}\n", machine_code, assembled));

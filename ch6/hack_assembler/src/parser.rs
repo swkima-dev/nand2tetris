@@ -1,6 +1,6 @@
 use anyhow::{Result, anyhow};
 use regex::Regex;
-use std::io::BufRead;
+use std::io::{BufRead, Seek};
 
 pub struct AsmParser<T: BufRead> {
     reader: T,
@@ -19,6 +19,12 @@ impl<T: BufRead> AsmParser<T> {
             .expect("This regex is valid."),
         }
     }
+
+    pub fn reader_init(&mut self, reader: T) -> Result<()> {
+        self.reader = reader;
+        Ok(())
+    }
+
     pub fn has_more_lines(&mut self) -> Result<bool> {
         Ok(!self.reader.fill_buf()?.is_empty())
     }

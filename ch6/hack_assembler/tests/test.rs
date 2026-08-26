@@ -30,3 +30,13 @@ fn pongl_asm() {
 fn maxl_asm() {
     assert_assembles_to("MaxL.asm", "MaxL.hack");
 }
+
+#[test]
+fn max_asm() {
+    assert_assembles_to("Max.asm", "Max.hack");
+}
+
+#[test]
+fn rect_asm() {
+    assert_assembles_to("Rect.asm", "Rect.hack");
+}
