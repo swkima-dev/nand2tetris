@@ -1,6 +1,6 @@
 use anyhow::{Result, anyhow};
 use regex::Regex;
-use std::io::{BufRead, Seek};
+use std::io::BufRead;
 
 pub struct AsmParser<T: BufRead> {
     reader: T,
@@ -63,7 +63,7 @@ impl<T: BufRead> AsmParser<T> {
                         jump: caps.name("jump").map(|m| m.as_str().to_string()),
                     }));
                 }
-                None => return Err(anyhow!("C Instruction parse error.")),
+                None => Err(anyhow!("C Instruction parse error.")),
             }
         }
     }
